@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Empleados de la Empresa</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Lista de Empleados</h1>
+    <table id="empleadosTable">
+        <thead>
+            <tr>
+                <th>id_empleado</th>
+                <th>nombre</th>
+                <th>apellido</th>
+                <th>edad</th>
+                <th>salario</th>
+                <th>id_departamento</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Los empleados se cargarán aquí dinámicamente -->
+        </tbody>
+    </table>
+
+    <script>
+        // Función para cargar los empleados desde el servidor
+        async function cargarEmpleados() {
+            try {
+                const response = await fetch('/empleados');
+                const empleados = await response.json();
+                
+                // Obtener el cuerpo de la tabla
+                const tbody = document.getElementById('empleadosTable').getElementsByTagName('tbody')[0];
+
+                // Limpiar cualquier dato previo en la tabla
+                tbody.innerHTML = '';
+
+                // Insertar filas con los empleados
+                empleados.forEach(empleado => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${empleado.id_empleado}</td>
+                        <td>${empleado.nombre}</td>
+                        <td>${empleado.apellido}</td>
+                        <td>${empleado.edad}</td>
+                        <td>${empleado.salario}</td>
+                        <td>${empleado.id_departamento}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (error) {
+                console.error('Error al cargar los empleados:', error);
+            }
+        }
+
+        // Cargar los empleados cuando la página cargue
+        window.onload = cargarEmpleados;
+    </script>
+</body>
+</html>
